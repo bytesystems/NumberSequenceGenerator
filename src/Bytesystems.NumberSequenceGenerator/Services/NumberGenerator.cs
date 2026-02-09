@@ -89,15 +89,13 @@ public partial class NumberGenerator
         if (segmentedSequence != null)
             return segmentedSequence;
 
-        // No existing segmented sequence. If we have a segment attribute definition, create one.
-        if (segmentAttribute == null)
-            return defaultSequence;
-
+        // Create a new segmented sequence.
+        // If a SegmentAttribute defines a specific pattern, use it; otherwise use the default pattern.
         segmentedSequence = new NumberSequence
         {
             Key = attribute.Key,
             Segment = segmentValue,
-            Pattern = segmentAttribute.Pattern,
+            Pattern = segmentAttribute?.Pattern ?? defaultPattern,
             CurrentNumber = attribute.Init,
         };
         sequenceSet.Add(segmentedSequence);

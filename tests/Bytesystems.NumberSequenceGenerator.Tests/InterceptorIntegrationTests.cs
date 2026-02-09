@@ -182,7 +182,7 @@ public class InterceptorIntegrationTests : IDisposable
     }
 
     [Fact]
-    public async Task SaveChanges_UnknownSegment_FallsBackToDefaultPattern()
+    public async Task SaveChanges_UnknownSegment_CreatesOwnSequenceWithDefaultPattern()
     {
         // Arrange
         var doc = new Document { DocumentType = "INVOICE" };
@@ -191,8 +191,27 @@ public class InterceptorIntegrationTests : IDisposable
         _context.Documents.Add(doc);
         await _context.SaveChangesAsync();
 
-        // Assert - falls back to default pattern "DOC-{#|4}"
+        // Assert - uses default pattern but with its own independent counter
         doc.DocumentNumber.Should().Be("DOC-0001");
+    }
+
+    [Fact]
+    public async Task SaveChanges_MultipleUnknownSegments_HaveIndependentCounters()
+    {
+        // Arrange - two different unknown segments
+        var invoice = new Document { DocumentType = "INVOICE" };
+        var receipt = new Document { DocumentType = "RECEIPT" };
+
+        // Act
+        _context.Documents.Add(invoice);
+        await _context.SaveChangesAsync();
+
+        _context.Documents.Add(receipt);
+        await _context.SaveChangesAsync();
+
+        // Assert - each unknown segment gets its own counter starting at 1
+        invoice.DocumentNumber.Should().Be("DOC-0001");
+        receipt.DocumentNumber.Should().Be("DOC-0001"); // Independent, not 0002!
     }
 
     [Fact]
