@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+
+    <!-- NuGet Package Metadata -->
+    <PackageId>Bytesystems.NumberSequenceGenerator</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>bytesystems ITS GmbH</Authors>
+    <Company>bytesystems ITS GmbH</Company>
+    <Description>Attribute-driven number sequence generator for EF Core. Supports configurable patterns with date tokens, auto-reset, padding, and segmentation. Port of the ByteSystems Symfony NumberSequenceGeneratorBundle.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/bytesystems/NumberSequenceGenerator</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bytesystems/NumberSequenceGenerator</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>efcore;number-generator;sequence;autonumber;invoice-number;document-number</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Bytesystems.NumberSequenceGenerator.Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
+
+</Project>

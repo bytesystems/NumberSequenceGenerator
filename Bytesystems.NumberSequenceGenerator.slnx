@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Bytesystems.NumberSequenceGenerator/Bytesystems.NumberSequenceGenerator.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Bytesystems.NumberSequenceGenerator.Tests/Bytesystems.NumberSequenceGenerator.Tests.csproj" />
+  </Folder>
+</Solution>
