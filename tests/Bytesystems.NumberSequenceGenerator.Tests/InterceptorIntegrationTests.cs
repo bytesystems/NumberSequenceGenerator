@@ -215,6 +215,30 @@ public class InterceptorIntegrationTests : IDisposable
     }
 
     [Fact]
+    public async Task SaveChanges_BatchInsert_GeneratesSequentialNumbers()
+    {
+        // Arrange - add multiple entities in a single SaveChanges call
+        var customers = Enumerable.Range(1, 50)
+            .Select(i => new Customer { FirstName = $"Customer {i}" })
+            .ToList();
+
+        // Act - batch insert
+        _context.Customers.AddRange(customers);
+        await _context.SaveChangesAsync();
+
+        // Assert - each should have a unique sequential number
+        for (int i = 0; i < customers.Count; i++)
+        {
+            customers[i].CustomerNumber.Should().Be($"KD-{(i + 1):D6}",
+                because: $"customer {i + 1} should get sequential number {i + 1}");
+        }
+
+        // Verify only ONE sequence record exists
+        var sequenceCount = _context.NumberSequences.Count(s => s.Key == "customer");
+        sequenceCount.Should().Be(1, because: "all customers should share one sequence record");
+    }
+
+    [Fact]
     public async Task SaveChanges_ExistingValue_DoesNotOverwrite()
     {
         // Arrange

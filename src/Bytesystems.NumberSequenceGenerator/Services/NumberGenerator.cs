@@ -62,9 +62,13 @@ public partial class NumberGenerator
         var sequenceSet = context.Set<NumberSequence>();
         var defaultPattern = attribute.Pattern;
 
-        // Try to find or create the default (non-segmented) sequence
-        var defaultSequence = await sequenceSet
-            .FirstOrDefaultAsync(s => s.Key == attribute.Key && s.Segment == null);
+        // Try to find the default (non-segmented) sequence.
+        // Check local change tracker FIRST (critical for batch SaveChanges with multiple entities),
+        // then fall back to database query.
+        var defaultSequence = sequenceSet.Local
+                .FirstOrDefault(s => s.Key == attribute.Key && s.Segment == null)
+            ?? await sequenceSet
+                .FirstOrDefaultAsync(s => s.Key == attribute.Key && s.Segment == null);
 
         if (defaultSequence == null)
         {
@@ -82,9 +86,11 @@ public partial class NumberGenerator
         if (segmentValue == null)
             return defaultSequence;
 
-        // Try to find an existing segmented sequence
-        var segmentedSequence = await sequenceSet
-            .FirstOrDefaultAsync(s => s.Key == attribute.Key && s.Segment == segmentValue);
+        // Try to find an existing segmented sequence (local first, then DB)
+        var segmentedSequence = sequenceSet.Local
+                .FirstOrDefault(s => s.Key == attribute.Key && s.Segment == segmentValue)
+            ?? await sequenceSet
+                .FirstOrDefaultAsync(s => s.Key == attribute.Key && s.Segment == segmentValue);
 
         if (segmentedSequence != null)
             return segmentedSequence;
